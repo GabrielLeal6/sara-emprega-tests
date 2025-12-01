@@ -29,8 +29,8 @@ Este repositório contém os testes de automação para a validação da qualida
     ```
 
 4.  **Executar todos os testes:**
-    * (se o deploy estiver no ar) *
+    *(se o deploy estiver no ar)*
     ```bash
-    pytest tests_e2e/specs/
+    pytest testes/specs/
     ```
-    *(Para rodar um teste específico, use `pytest tests_e2e/specs/test_login.py`)*
+    *(Para rodar um teste específico, use `pytest testes/specs/test_login.py`)*
