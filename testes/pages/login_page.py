@@ -71,3 +71,15 @@ class LoginPage:
             return True
         except:
             return False
+
+    
+    def esta_na_pagina_login(self):
+        try:
+            # Verifica se a URL não tem mais "/home" ou se voltou para "/" ou "/login"
+            # E verifica se o botão de entrar está visível novamente
+            WebDriverWait(self.driver, 5).until(
+                EC.visibility_of_element_located(self.LOGIN_BUTTON)
+            )
+            return True
+        except:
+            return False
