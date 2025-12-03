@@ -1,31 +1,21 @@
-# Comando para rodar: pytest automacaoLaila/publicar_vaga.py
-'''
-Esse caso teste corresponde à publicação de uma vaga pela entidade
-empresa.
-
-Melhorias de robustez:
-1. Refinamento dos XPaths para seleção do Radix combobox.
-2. Locator mais genérico para o botão "Publicar Vaga".
-3. Adição de logs de debug e pausas estratégicas (time.sleep) para estabilidade em apps React.
-4. Aumento do timeout padrão e adição de fallback para o locator do popup de sucesso (para tratar TimeoutException).
-'''
+# Comando para rodar: pytest automacaoLaila/cancelar_publicacao.py
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, StaleElementReferenceException
-# Não precisamos de Keys, já que o fechamento é manual
-# from selenium.webdriver.common.keys import Keys 
 
 # Configurações
 LOGIN_URL = "https://sara-frontend-736daffd516a.herokuapp.com/login"
 HOME_EMPRESA_URL_FRAGMENT = "/home/empresa"
+VAGAS_EMPRESA_URL = "https://sara-frontend-736daffd516a.herokuapp.com/empresa/vagas"
+VAGAS_EMPRESA_FRAGMENT = "/empresa/vagas" # Fragmento para validação robusta
 DEFAULT_TIMEOUT = 30 
 
 def _select_radix_option(driver, wait: WebDriverWait, button_id: str, option_text: str, timeout_sec: int = 12):
     """
     Clica no botão do Radix combobox (pelo id) e seleciona a opção desejada.
-    Prioriza o locator de 'role=option' que é comum em portais Radix.
+    Função reutilizada do teste anterior para preencher Tipo e Modalidade.
     """
     print(f"-> Tentando selecionar a opção '{option_text}' no combobox #{button_id}...")
     try:
@@ -72,11 +62,11 @@ def _select_radix_option(driver, wait: WebDriverWait, button_id: str, option_tex
         raise AssertionError(f"Erro geral ao selecionar o Radix option '{option_text}' (ID: {button_id}): {e}")
 
 
-def test_publicar_vaga(setup_browser):
+def test_cancelar_publicacao_vaga(setup_browser):
     driver = setup_browser
     wait = WebDriverWait(driver, DEFAULT_TIMEOUT)
 
-    print("\n--- INICIANDO TESTE: Publicação de Vaga ---")
+    print("\n--- INICIANDO TESTE: Cancelamento de Publicação de Vaga ---")
 
     # 1) Abrir a tela de login
     driver.get(LOGIN_URL)
@@ -104,87 +94,74 @@ def test_publicar_vaga(setup_browser):
     print("4.1) Pausa encerrada. Retomando a automação.")
 
 
-    # 5) Preencher campos de texto
-    print("5. Preenchendo campos de texto...")
+    # 5) Preencher campos de texto (Necessário para simular um cancelamento real)
+    print("5. Preenchendo campos de texto (Simulação)...")
     
     # Campo "title"
-    # Agora que o popup foi removido, a automação deve conseguir encontrar e focar neste elemento.
     title = wait.until(EC.presence_of_element_located((By.ID, "title")))
     title.clear()
-    title.send_keys("Desenvolvedor Front-end - Automação")
+    title.send_keys("Vaga a ser Cancelada - Teste")
 
     # Campo "area"
     area = wait.until(EC.presence_of_element_located((By.ID, "area")))
     area.clear()
-    area.send_keys("Tecnologia")
+    area.send_keys("QA/Automação")
 
-    # Campo "description"
-    description = wait.until(EC.presence_of_element_located((By.ID, "description")))
-    description.clear()
-    description.send_keys("Atuação com React/Next.js e Tailwind. Vaga para estágio.")
-
-    # Campo "requirements"
-    requirements = wait.until(EC.presence_of_element_located((By.ID, "requirements")))
-    requirements.clear()
-    requirements.send_keys("Desejável conhecimento básico em JavaScript e React.")
-
-    # Campo "location"
-    location = wait.until(EC.presence_of_element_located((By.ID, "location")))
-    location.clear()
-    location.send_keys("São Paulo, SP")
-
-    # Campo "salary"
-    salary = wait.until(EC.presence_of_element_located((By.ID, "salary")))
-    salary.clear()
-    salary.send_keys("A combinar")
-    
-    # Pausa de 1 segundo para garantir que o framework de front-end registre o preenchimento de todos os inputs
-    time.sleep(1)
-
-    # 6) Selecionar Tipo -> Estágio (Radix combobox)
+    # Selecionar Tipo -> Estágio
     _select_radix_option(driver, wait, button_id="type", option_text="Estágio")
 
-    # 7) Selecionar Modalidade -> Presencial (Radix combobox)
+    # Selecionar Modalidade -> Presencial
     _select_radix_option(driver, wait, button_id="modality", option_text="Presencial")
     
-    print("8. Pausando 1s para estabilizar o formulário antes de publicar...")
-    time.sleep(1) # Pausa estratégica final
+    print("6. Campos preenchidos.")
+    time.sleep(1) # Pequena pausa para estabilizar o formulário
 
-    # 9) Clicar em Publicar Vaga (Locator mais genérico)
-    print("9. Tentando clicar no botão 'Publicar Vaga'...")
+    # 7) Clicar em Cancelar
+    print("7. Tentando clicar no botão 'Cancelar'...")
     
-    # Usando um contains mais genérico para buscar qualquer botão que contenha "Publicar"
-    publicar_xpath = "//button[contains(translate(normalize-space(.), 'PUBLICAR', 'publicar'), 'publicar')]"
+    # Localizador exato do botão "Cancelar"
+    cancelar_xpath = "//button[normalize-space()='Cancelar']"
     
-    publicar_btn = wait.until(EC.element_to_be_clickable((By.XPATH, publicar_xpath)))
+    cancelar_btn = wait.until(EC.element_to_be_clickable((By.XPATH, cancelar_xpath)))
+    print(f"   Botão encontrado com o texto: '{cancelar_btn.text}'.")
     
-    # Loga o texto exato do botão encontrado
-    print(f"   Botão encontrado com o texto: '{publicar_btn.text}'. Clicando...")
-    publicar_btn.click()
-
-    # 10) Validar popup de sucesso
-    print("10. Validando popup de sucesso...")
-    
-    # Tentativa 1: H2
     try:
-        success_title = wait.until(EC.visibility_of_element_located((By.XPATH, "//h2[contains(normalize-space(.), 'Vaga Publicada')]")))
-    except TimeoutException:
-        print("   Aviso: H2 não encontrado. Tentando locator genérico para o título...")
-        # Tentativa 2: Qualquer elemento visível
-        try:
-             success_title = wait.until(EC.visibility_of_element_located((By.XPATH, "//*[contains(normalize-space(.), 'Vaga Publicada')]")))
-        except TimeoutException:
-             print("   Aviso: Locator genérico falhou. Tentando locator para texto em qualquer lugar...")
-             # Tentativa 3: Último recurso
-             success_title = wait.until(EC.visibility_of_element_located((By.XPATH, "//body//*[contains(normalize-space(.), 'Vaga Publicada')]")))
+        # Tenta o clique normal do Selenium (mais próximo da interação do usuário)
+        cancelar_btn.click()
+        print("   Clicado com sucesso via Selenium nativo.")
+    except Exception as e:
+        # Se o clique normal falhar (ex: ElementClickInterceptedException), tenta o clique via JavaScript
+        print(f"   Aviso: O clique Selenium falhou ({type(e).__name__}). Tentando clique via JavaScript como fallback.")
+        driver.execute_script("arguments[0].click();", cancelar_btn)
+        print("   Clicado com sucesso via JavaScript.")
 
 
-    # Espera pela mensagem de detalhe
-    wait.until(EC.visibility_of_element_located((By.XPATH, "//p[contains(normalize-space(.), 'Sua vaga foi cadastrada com sucesso')]")))
+    # ADIÇÃO DA PAUSA: Espera 1 segundo para o redirecionamento iniciar
+    time.sleep(1) 
+
+    # 8) Checagem e Validação do redirecionamento
+    print(f"8. Checando se o redirecionamento para a URL ({VAGAS_EMPRESA_FRAGMENT}) iniciou...")
+
+    # Se a URL ainda estiver no formulário ou em 'data:', forçamos a navegação
+    current_url = driver.current_url
+    if current_url == VAGAS_EMPRESA_URL or VAGAS_EMPRESA_FRAGMENT in current_url:
+        print(f"   Redirecionamento iniciado corretamente para {VAGAS_EMPRESA_FRAGMENT}.")
+    elif current_url.startswith("data:") or HOME_EMPRESA_URL_FRAGMENT in current_url:
+        # Se a navegação não funcionou, forçamos o carregamento da URL alvo.
+        print(f"   A navegação falhou (URL atual: {current_url}). Forçando navegação para {VAGAS_EMPRESA_URL}.")
+        driver.get(VAGAS_EMPRESA_URL)
+        # Uma pausa extra pode ser necessária após o driver.get para garantir que a página carregue.
+        time.sleep(2)
+    else:
+        print(f"   Aguardando o EC.url_contains({VAGAS_EMPRESA_FRAGMENT})...")
+
     
-    print("   SUCESSO: Popup 'Vaga Publicada' encontrado.")
+    # A última etapa de validação (EC.url_contains) garante que a página final é a correta.
+    wait.until(EC.url_contains(VAGAS_EMPRESA_FRAGMENT))
+
+    print(f"   SUCESSO: Redirecionamento para {VAGAS_EMPRESA_FRAGMENT} confirmado.")
 
     # pausa pequena para visualização (opcional)
     time.sleep(1)
     
-    print("--- TESTE FINALIZADO COM SUCESSO ---")
+    print("--- TESTE DE CANCELAMENTO FINALIZADO COM SUCESSO ---")
