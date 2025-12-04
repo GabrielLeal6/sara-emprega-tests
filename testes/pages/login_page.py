@@ -1,39 +1,56 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
 
 class LoginPage:
     def __init__(self, driver):
         self.driver = driver
-        self.url = "https://sara-frontend-736daffd516a.herokuapp.com/login" 
+        self.default_url = "https://sara-frontend-736daffd516a.herokuapp.com/login"
 
     # ELEMENTOS
     EMAIL_INPUT = (By.ID, "email")
-    PASSWORD_INPUT = (By.ID, "password")
+    PASSWORD_INPUT = (By.CSS_SELECTOR, "input[type='password']")
     LOGIN_BUTTON = (By.CSS_SELECTOR, "button[type='submit']")
-    
+
     # Mensagem de erro global (tarja vermelha no topo - erro de backend)
     GLOBAL_ERROR_MESSAGE = (By.CLASS_NAME, "bg-red-100")
 
     # Mensagens de erro de validação (texto vermelho abaixo dos campos)
     EMAIL_FIELD_ERROR = (By.XPATH, "//input[@id='email']/following-sibling::p")
-    # Para senha, o erro está fora da div relativa do input (devido ao botão de 'olho')
-    PASSWORD_FIELD_ERROR = (By.XPATH, "//input[@id='password']/parent::div/following-sibling::p")
+    PASSWORD_FIELD_ERROR = (
+        By.XPATH,
+        "//input[@id='password']/parent::div/following-sibling::p",
+    )
 
     # AÇÕES
-    def abrir(self):
-        self.driver.get(self.url)
+    def abrir(self, base_url=None):
+        """
+        Abre a página de login.
+        Se base_url for passado (pelos testes), usa ele. Senão, usa o padrão.
+        """
+        if base_url:
+            self.driver.get(f"{base_url}/login")
+        else:
+            self.driver.get(self.default_url)
 
     def fazer_login(self, email, senha):
-        self.driver.find_element(*self.EMAIL_INPUT).clear()
-        if email: 
-            self.driver.find_element(*self.EMAIL_INPUT).send_keys(email)
-        
+        email_field = WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(self.EMAIL_INPUT)
+        )
+        email_field.clear()
+
+        if email:
+            email_field.send_keys(email)
+
         self.driver.find_element(*self.PASSWORD_INPUT).clear()
         if senha:
             self.driver.find_element(*self.PASSWORD_INPUT).send_keys(senha)
-        
-        self.driver.find_element(*self.LOGIN_BUTTON).click()
+
+        btn = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(self.LOGIN_BUTTON)
+        )
+        btn.click()
 
     # VALIDAÇÕES
     def obter_mensagem_erro_global(self):
@@ -65,18 +82,13 @@ class LoginPage:
 
     def esta_na_home(self):
         try:
-            WebDriverWait(self.driver, 5).until(
-                EC.url_contains("/home")
-            )
+            WebDriverWait(self.driver, 10).until(EC.url_contains("/home"))
             return True
         except:
             return False
 
-    
     def esta_na_pagina_login(self):
         try:
-            # Verifica se a URL não tem mais "/home" ou se voltou para "/" ou "/login"
-            # E verifica se o botão de entrar está visível novamente
             WebDriverWait(self.driver, 5).until(
                 EC.visibility_of_element_located(self.LOGIN_BUTTON)
             )
