@@ -1,5 +1,8 @@
 # Comando para rodar: pytest automacaoLaila/filtrar_vagas_atuacao.py
-
+'''
+Esse caso de teste corresponde à 
+filtragem de vagas por atuação
+'''
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,8 +16,6 @@ HOME_EMPRESA_URL_FRAGMENT = "/home/empresa"
 VAGAS_PUBLICAS_URL = "https://sara-frontend-736daffd516a.herokuapp.com/vagas" # URL pública para o teste de filtro
 VAGAS_PUBLICAS_FRAGMENT = "/vagas" 
 DEFAULT_TIMEOUT = 30 
-
-# Removendo a função slow_send_keys pois ela não é necessária para a ação de clique/filtro.
 
 def test_filtrar_vaga_por_tecnologia(setup_browser):
     driver = setup_browser
@@ -54,11 +55,9 @@ def test_filtrar_vaga_por_tecnologia(setup_browser):
     print(f"6. Confirmação: A URL atual é {VAGAS_PUBLICAS_FRAGMENT}.")
     time.sleep(2) # Pausa para garantir que a lista e os ícones de filtro carreguem
 
-    # 7) Clicar no ícone de Funil (Filtro)
-    # Procuramos pelo elemento SVG com a classe 'lucide-funnel' ou o botão pai (assumindo que o SVG está dentro de um botão clicável)
+    # 7) Clicar no ícone de Filtro
     print("7. Buscando e clicando no ícone de filtro (Funil)...")
     
-    # O XPath busca o SVG do funil (se não funcionar, o ideal seria buscar pelo botão que o contém)
     filtro_btn_xpath = "//button[./*[name()='svg' and contains(@class, 'lucide-funnel')]]" 
     
     try:
@@ -71,8 +70,6 @@ def test_filtrar_vaga_por_tecnologia(setup_browser):
     time.sleep(1) # Aguarda o modal de filtro abrir
 
     # 8) Marcar a opção 'Tecnologia'
-    # Você forneceu a label, mas precisamos do input/checkbox associado à label.
-    # Assumindo que o input tem o ID "Tecnologia" ou que podemos clicar na label.
     label_tecnologia_xpath = f"//label[normalize-space()='{CATEGORIA_FILTRO}']"
     
     print(f"8. Buscando e clicando na label da categoria: '{CATEGORIA_FILTRO}'...")
@@ -92,7 +89,7 @@ def test_filtrar_vaga_por_tecnologia(setup_browser):
     print(f"9. Aguardando a vaga filtrada com a tag '{CATEGORIA_FILTRO}' aparecer...")
     
     try:
-        # Aumentamos o timeout para carregar o resultado da filtragem
+        # Timeout para carregar o resultado da filtragem
         wait_long = WebDriverWait(driver, 60) 
         resultado_tag = wait_long.until(EC.visibility_of_element_located((By.XPATH, tag_resultado_xpath)))
         print(f"   SUCESSO: Encontrada a tag de categoria '{resultado_tag.text}' no resultado da vaga.")

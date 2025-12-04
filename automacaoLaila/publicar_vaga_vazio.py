@@ -1,4 +1,8 @@
 # Comando para rodar: pytest automacaoLaila/publicar_vaga_vazio.py
+'''
+Esse caso de teste corresponde à
+tentativa de publicação de vaga sem preencher os campos obrigatórios
+'''
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,7 +17,8 @@ DEFAULT_TIMEOUT = 30
 
 def _select_radix_option(driver, wait: WebDriverWait, button_id: str, option_text: str, timeout_sec: int = 12):
     """
-    Função auxiliar removida para este teste, pois não vamos preencher os campos.
+    Função auxiliar removida para este teste, pois não irá preencher os campos.
+    Ela havia sido usada nos outros testes.
     """
     pass
 
@@ -48,12 +53,10 @@ def test_tentar_publicar_vaga_sem_preencher(setup_browser):
     time.sleep(15) 
     print("4.1) Pausa encerrada. Retomando a automação.")
 
-    # 5) Verificar se estamos na URL correta antes do clique
+    # 5) Verificar se está na URL correta antes do clique
     initial_url = driver.current_url
     print(f"5. URL inicial: {initial_url}")
     
-    # OBS: Nesta nova versão do teste, o passo 5 (Preencher campos) e 6/7 (Selecionar comboboxes)
-    # são INTENCIONALMENTE pulados para simular o envio do formulário vazio.
     
     # 6) Clicar em Publicar Vaga (Locator mais genérico)
     print("6. Tentando clicar no botão 'Publicar Vaga' SEM PREENCHER NADA...")
@@ -79,7 +82,6 @@ def test_tentar_publicar_vaga_sem_preencher(setup_browser):
     print("   SUCESSO: A URL PERMANECEU a mesma após a tentativa de publicação (indicando falha na validação).")
 
     # 8) Validar AUSÊNCIA do popup de sucesso
-    # Vamos usar um timeout muito curto (3 segundos) para falhar rapidamente se o popup aparecer.
     # O teste SÓ passa se o elemento NÃO for encontrado.
     print("8. Validando AUSÊNCIA do popup 'Vaga Publicada'...")
     try:
@@ -90,9 +92,6 @@ def test_tentar_publicar_vaga_sem_preencher(setup_browser):
     except TimeoutException:
         # Este é o comportamento esperado: o popup NÃO deve ser encontrado
         print("   SUCESSO: O popup 'Vaga Publicada' NÃO foi exibido (comportamento esperado).")
-
-    # 9) (OPCIONAL) Validar a presença de algum indicador de erro genérico
-    # Como o aviso específico não é inspecionável, vamos parar por aqui.
     
     time.sleep(2)
     

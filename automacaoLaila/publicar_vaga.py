@@ -1,21 +1,14 @@
 # Comando para rodar: pytest automacaoLaila/publicar_vaga.py
 '''
 Esse caso teste corresponde à publicação de uma vaga pela entidade
-empresa.
-
-Melhorias de robustez:
-1. Refinamento dos XPaths para seleção do Radix combobox.
-2. Locator mais genérico para o botão "Publicar Vaga".
-3. Adição de logs de debug e pausas estratégicas (time.sleep) para estabilidade em apps React.
-4. Aumento do timeout padrão e adição de fallback para o locator do popup de sucesso (para tratar TimeoutException).
+empresa com dados válidos em todos os campos.
 '''
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, StaleElementReferenceException
-# Não precisamos de Keys, já que o fechamento é manual
-# from selenium.webdriver.common.keys import Keys 
+
 
 # Configurações
 LOGIN_URL = "https://sara-frontend-736daffd516a.herokuapp.com/login"
@@ -108,7 +101,6 @@ def test_publicar_vaga(setup_browser):
     print("5. Preenchendo campos de texto...")
     
     # Campo "title"
-    # Agora que o popup foi removido, a automação deve conseguir encontrar e focar neste elemento.
     title = wait.until(EC.presence_of_element_located((By.ID, "title")))
     title.clear()
     title.send_keys("Desenvolvedor Front-end - Automação")
@@ -165,7 +157,7 @@ def test_publicar_vaga(setup_browser):
     # 10) Validar popup de sucesso
     print("10. Validando popup de sucesso...")
     
-    # Tentativa 1: H2
+   
     try:
         success_title = wait.until(EC.visibility_of_element_located((By.XPATH, "//h2[contains(normalize-space(.), 'Vaga Publicada')]")))
     except TimeoutException:
@@ -184,7 +176,7 @@ def test_publicar_vaga(setup_browser):
     
     print("   SUCESSO: Popup 'Vaga Publicada' encontrado.")
 
-    # pausa pequena para visualização (opcional)
+    # pausa pequena para visualização 
     time.sleep(1)
     
     print("--- TESTE FINALIZADO COM SUCESSO ---")

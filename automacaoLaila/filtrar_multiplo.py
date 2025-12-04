@@ -1,4 +1,7 @@
 # Comando para rodar: pytest automacaoLaila/filtrar_multiplo.py
+'''
+Esse caso de teste corresponde à filtragem múltipla de vagas
+'''
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -12,8 +15,6 @@ HOME_EMPRESA_URL_FRAGMENT = "/home/empresa"
 VAGAS_PUBLICAS_URL = "https://sara-frontend-736daffd516a.herokuapp.com/vagas" # URL pública para o teste de filtro
 VAGAS_PUBLICAS_FRAGMENT = "/vagas" 
 DEFAULT_TIMEOUT = 30 
-
-# Removendo a função slow_send_keys pois ela não é necessária para a ação de clique/filtro.
 
 def test_filtrar_vaga_por_presencial_e_clt(setup_browser):
     driver = setup_browser
@@ -54,7 +55,7 @@ def test_filtrar_vaga_por_presencial_e_clt(setup_browser):
     print(f"6. Confirmação: A URL atual é {VAGAS_PUBLICAS_FRAGMENT}.")
     time.sleep(2) # Pausa para garantir que a lista e os ícones de filtro carreguem
 
-    # 7) Clicar no ícone de Funil (Filtro) para abrir o modal de filtros
+    # 7) Clicar no ícone de Filtro para abrir o modal de filtros
     print("7. Buscando e clicando no ícone de filtro (Funil) para abrir as opções...")
     filtro_btn_xpath = "//button[./*[name()='svg' and contains(@class, 'lucide-funnel')]]" 
     

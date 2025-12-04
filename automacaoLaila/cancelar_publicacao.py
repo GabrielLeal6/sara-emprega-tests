@@ -1,4 +1,8 @@
 # Comando para rodar: pytest automacaoLaila/cancelar_publicacao.py
+'''
+Esse caso de teste corresponde ao cancelamento da publicação
+de uma vaga antes que a ação seja concluída
+'''
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,10 +17,7 @@ VAGAS_EMPRESA_FRAGMENT = "/empresa/vagas" # Fragmento para validação robusta
 DEFAULT_TIMEOUT = 30 
 
 def _select_radix_option(driver, wait: WebDriverWait, button_id: str, option_text: str, timeout_sec: int = 12):
-    """
-    Clica no botão do Radix combobox (pelo id) e seleciona a opção desejada.
-    Função reutilizada do teste anterior para preencher Tipo e Modalidade.
-    """
+    # Clica no botão do Radix combobox (pelo id) e seleciona a opção desejada.
     print(f"-> Tentando selecionar a opção '{option_text}' no combobox #{button_id}...")
     try:
         # 1. Clica no botão para abrir o dropdown
@@ -161,7 +162,7 @@ def test_cancelar_publicacao_vaga(setup_browser):
 
     print(f"   SUCESSO: Redirecionamento para {VAGAS_EMPRESA_FRAGMENT} confirmado.")
 
-    # pausa pequena para visualização (opcional)
+    # pausa pequena para visualização 
     time.sleep(1)
     
     print("--- TESTE DE CANCELAMENTO FINALIZADO COM SUCESSO ---")

@@ -1,10 +1,14 @@
 # Comando para rodar: pytest automacaoLaila/pesquisa_sem_correp.py
+'''
+Esse caso de teste corresponde à 
+pesquisa de vagas sem resultado
+'''
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, StaleElementReferenceException
-from selenium.webdriver.common.keys import Keys # Importação necessária para simular o ENTER
+from selenium.webdriver.common.keys import Keys 
 
 # Configurações
 LOGIN_URL = "https://sara-frontend-736daffd516a.herokuapp.com/login"
@@ -93,7 +97,7 @@ def test_pesquisar_vaga_sem_resultado(setup_browser):
     print(f"8. Aguardando aparecer a mensagem: '{MENSAGEM_NAO_ENCONTRADA}'...")
     
     try:
-        # Aumentei o timeout para dar tempo da pesquisa carregar
+        # Timeout para dar tempo da pesquisa carregar
         wait_long = WebDriverWait(driver, 60) 
         resultado_vazio = wait_long.until(EC.visibility_of_element_located((By.XPATH, resultado_vazio_xpath)))
         print(f"   SUCESSO: Encontrada a mensagem de resultado vazio: '{resultado_vazio.text}'.")

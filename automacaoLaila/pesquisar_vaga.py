@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException, StaleElementReferenceException
-from selenium.webdriver.common.keys import Keys # Importação necessária para simular o ENTER
+from selenium.webdriver.common.keys import Keys 
 
 # Configurações
 LOGIN_URL = "https://sara-frontend-736daffd516a.herokuapp.com/login"
@@ -96,7 +96,7 @@ def test_pesquisar_vaga_por_titulo(setup_browser):
     print(f"8. Aguardando aparecer na tela um resultado com o texto: '{RESULTADO_ESPERADO_FRAGMENTO}'...")
     
     try:
-        # Aumentei o timeout para dar tempo da pesquisa carregar
+        # Timeout para dar tempo da pesquisa carregar
         wait_long = WebDriverWait(driver, 60) 
         resultado_vaga = wait_long.until(EC.visibility_of_element_located((By.XPATH, resultado_xpath)))
         print(f"   SUCESSO: Encontrado o título da vaga: '{resultado_vaga.text}' na lista de resultados.")

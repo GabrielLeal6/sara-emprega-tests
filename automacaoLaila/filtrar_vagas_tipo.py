@@ -1,4 +1,8 @@
 # Comando para rodar: pytest automacaoLaila/filtrar_vagas_tipo.py
+'''
+Esse caso de teste corresponde à 
+filtragem de vagas por tipo de contrato
+'''
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,7 +17,6 @@ VAGAS_PUBLICAS_URL = "https://sara-frontend-736daffd516a.herokuapp.com/vagas" # 
 VAGAS_PUBLICAS_FRAGMENT = "/vagas" 
 DEFAULT_TIMEOUT = 30 
 
-# Removendo a função slow_send_keys pois ela não é necessária para a ação de clique/filtro.
 
 def test_filtrar_vaga_por_clt(setup_browser):
     driver = setup_browser
@@ -53,23 +56,21 @@ def test_filtrar_vaga_por_clt(setup_browser):
     print(f"6. Confirmação: A URL atual é {VAGAS_PUBLICAS_FRAGMENT}.")
     time.sleep(2) # Pausa para garantir que a lista e os ícones de filtro carreguem
 
-    # 7) Clicar no ícone de Funil (Filtro) para abrir o modal de filtros
+    # 7) Clicar no ícone de filtro para abrir o modal de filtros
     print("7. Buscando e clicando no ícone de filtro (Funil) para abrir as opções...")
     
-    # O XPath busca o SVG do funil
     filtro_btn_xpath = "//button[./*[name()='svg' and contains(@class, 'lucide-funnel')]]" 
     
     try:
         filtro_btn = wait.until(EC.element_to_be_clickable((By.XPATH, filtro_btn_xpath)))
         filtro_btn.click()
-        print("7.1. Ícone de Funil (Filtro) clicado com sucesso.")
+        print("7.1. Ícone de filtro clicado com sucesso.")
     except TimeoutException:
-         raise AssertionError("Falha: O botão de filtro (ícone de funil) não foi encontrado ou não está clicável.")
+         raise AssertionError("Falha: O botão de filtro (ícone de filtro) não foi encontrado ou não está clicável.")
 
     time.sleep(1) # Aguarda o modal de filtro abrir
 
     # 8) Marcar a opção 'CLT'
-    # Procuramos pelo input de tipo checkbox que tenha o id="CLT"
     input_clt_xpath = f"//input[@type='checkbox' and @id='{REGIME_FILTRO}']"
     
     print(f"8. Buscando e clicando no checkbox para: '{REGIME_FILTRO}'...")
@@ -89,7 +90,7 @@ def test_filtrar_vaga_por_clt(setup_browser):
     print(f"9. Aguardando a vaga filtrada com o regime '{REGIME_FILTRO}' aparecer...")
     
     try:
-        # Aumentamos o timeout para carregar o resultado da filtragem
+        # Timeout para carregar o resultado da filtragem
         wait_long = WebDriverWait(driver, 60) 
         resultado_tag = wait_long.until(EC.visibility_of_element_located((By.XPATH, tag_resultado_xpath)))
         print(f"   SUCESSO: Encontrado o regime '{resultado_tag.text}' no resultado da vaga.")

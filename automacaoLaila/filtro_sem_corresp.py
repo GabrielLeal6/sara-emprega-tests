@@ -1,14 +1,8 @@
 # Comando para rodar: pytest automacaoLaila/filtro_sem_corresp.py
 
 '''
-Este arquivo contém apenas um caso de teste:
-1. test_filtrar_vaga_sem_resultado: Faz o login com a conta da empresa,
-   redireciona IMEDIATAMENTE para a URL pública /vagas e aplica um filtro
-   que não deve retornar resultados ("Sirinhaém"), verificando se a
-   mensagem de "Nenhuma vaga encontrada" é exibida.
-
-Este código inclui pausas e comandos de limpeza de campo essenciais
-para a estabilidade do processo de login no ambiente da aplicação.
+Esse caso de teste corresponde à 
+filtragem de vagas sem resultado
 '''
 import time
 from selenium.webdriver.common.by import By
@@ -77,7 +71,6 @@ def test_filtrar_vaga_sem_resultado(setup_browser):
     time.sleep(1) # Aguarda o modal de filtro abrir
 
     # 8) Marcar o filtro 'Sirinhaém'
-    # Procuramos pela label com o texto "Sirinhaém"
     label_cidade_xpath = f"//label[normalize-space()='{CIDADE_FILTRO}']"
     print(f"8.1. Buscando e clicando na label para: '{CIDADE_FILTRO}'...")
     try:
@@ -91,12 +84,11 @@ def test_filtrar_vaga_sem_resultado(setup_browser):
 
     # 9) Validar resultado: A mensagem de "Nenhuma vaga encontrada" deve aparecer
     
-    # O XPath busca o div com o texto de resultado vazio
     resultado_vazio_xpath = f"//div[normalize-space()='{MENSAGEM_NAO_ENCONTRADA}']"
     print(f"9. Aguardando a mensagem de '{MENSAGEM_NAO_ENCONTRADA}' aparecer...")
     
     try:
-        # Aumentamos o timeout para carregar o resultado da filtragem
+        # Timeout para carregar o resultado da filtragem
         wait_long = WebDriverWait(driver, 60) 
         resultado_vazio = wait_long.until(EC.visibility_of_element_located((By.XPATH, resultado_vazio_xpath)))
         print(f"   SUCESSO: Encontrada a mensagem de resultado vazio: '{resultado_vazio.text}'.")

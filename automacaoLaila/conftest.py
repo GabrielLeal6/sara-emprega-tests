@@ -1,7 +1,8 @@
+#Configuração inicial
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.chrome.options import Options # Importação Adicionada
+from selenium.webdriver.chrome.options import Options 
 from webdriver_manager.chrome import ChromeDriverManager
 
 @pytest.fixture(scope="session")
@@ -25,7 +26,7 @@ def setup_browser():
     # 2. Configura o ChromeDriver automaticamente
     service = ChromeService(ChromeDriverManager().install())
     
-    # 3. Inicializa o WebDriver, PASSANDO as opções configuradas
+    # 3. Inicializa o WebDriver, passando as opções configuradas
     driver = webdriver.Chrome(service=service, options=chrome_options)
     
     # Configurações iniciais
