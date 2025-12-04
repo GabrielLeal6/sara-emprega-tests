@@ -12,6 +12,8 @@ class HomePage:
         # O link de sair está dentro da navegação e contém o texto "Sair"
         self.LOGOUT_LINK = (By.XPATH, "//nav//a[contains(., 'Sair')]")
 
+        self.BTN_PERFIL = (By.XPATH, "//a[contains(text(), 'Meu Perfil') or contains(@href, '/perfil')]")
+
     # AÇÕES
 
     def fazer_logout(self):
@@ -32,3 +34,8 @@ class HomePage:
         base_url = self.driver.current_url.split('/login')[0]
         url_restrita = "https://sara-frontend-736daffd516a.herokuapp.com/home/user" 
         self.driver.get(url_restrita)
+
+    def ir_para_perfil(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(self.BTN_PERFIL)
+        ).click()
