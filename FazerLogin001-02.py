@@ -6,10 +6,10 @@ from selenium.common.exceptions import WebDriverException, NoSuchElementExceptio
 import time
 
 CHROME_DRIVER_PATH = '/path/to/chromedriver'
-LOGIN_URL = 'http://localhost:3000/login' 
+LOGIN_URL = 'https://sara-frontend-736daffd516a.herokuapp.com/login' 
 
-VALID_EMAIL = 'teste@mail.com'
-INVALID_PASSWORD = 'senhaerrada'
+VALID_EMAIL = 'fulanoadmnato@sara.com'
+INVALID_PASSWORD = 'semsenha'
 
 EXPECTED_ERROR_MESSAGE = 'Credenciais inválidas' 
 
@@ -33,8 +33,8 @@ def test_invalid_password(driver):
         email_field = driver.find_element(By.CSS_SELECTOR, 'input[type="email"], input:nth-of-type(1)')
         email_field.send_keys(VALID_EMAIL)
         
-        password_field = driver.find_element(By.CSS_SELECTOR, 'input[type="password"]')
-        password_field.send_keys(INVALID_PASSWORD)
+        """password_field = driver.find_element(By.CSS_SELECTOR, 'input[type="password"]')
+        password_field.send_keys(INVALID_PASSWORD)"""
         
         login_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Entrar')]")
         login_button.click()

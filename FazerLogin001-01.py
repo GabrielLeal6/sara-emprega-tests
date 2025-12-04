@@ -6,10 +6,10 @@ from selenium.common.exceptions import WebDriverException, NoSuchElementExceptio
 import time
 
 CHROME_DRIVER_PATH = '/path/to/chromedriver'
-LOGIN_URL = 'http://localhost:3000/login'
+LOGIN_URL = 'https://sara-frontend-736daffd516a.herokuapp.com/login'
 
-VALID_EMAIL = 'teste@mail.com'
-VALID_PASSWORD = 'senha123'
+VALID_EMAIL = 'fulanoadmnato@sara.com'
+VALID_PASSWORD = 'admin123'
 
 def setup_driver():
     try:
