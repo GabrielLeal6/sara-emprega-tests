@@ -8,14 +8,13 @@ import time
 
 # NOTE
 CHROME_DRIVER_PATH = '/path/to/chromedriver'
-LOGIN_URL = 'http://localhost:3000/login'
+LOGIN_URL = 'https://sara-frontend-736daffd516a.herokuapp.com/login'
 
-# Credenciais (a senha é usada apenas para tentar enviar o formulário)
+
 VALID_PASSWORD = 'senha123'
 EXPECTED_ERROR_MESSAGE = 'O campo de e-mail é obrigatório.'
 
 def setup_driver():
-    """Inicializa e configura o Selenium WebDriver."""
     try:
         if CHROME_DRIVER_PATH and CHROME_DRIVER_PATH != '/path/to/chromedriver':
              service = Service(CHROME_DRIVER_PATH)
@@ -54,7 +53,7 @@ def test_empty_email(driver):
         login_button.click()
 
         # --- 5. Verificação da Mensagem de Erro  ---
-        time.sleep(1) # Aguarda um momento para a mensagem de erro aparecer
+        time.sleep(1)
  
         error_message_element = driver.find_element(By.XPATH, f"//p[contains(text(), '{EXPECTED_ERROR_MESSAGE}')]")
         

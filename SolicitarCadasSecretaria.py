@@ -7,8 +7,8 @@ import time
 import random
 
 CHROME_DRIVER_PATH = '/path/to/chromedriver'
-CADASTRO_URL = 'http://localhost:3000/cadastro/secretaria'
-LOGIN_URL = 'http://localhost:3000/login' 
+CADASTRO_URL = 'https://sara-frontend-736daffd516a.herokuapp.com/cadastro/secretaria'
+LOGIN_URL = 'https://sara-frontend-736daffd516a.herokuapp.com/login' 
 
 # Dados válidos para preencher os outros campos
 SEMESTER = str(random.randint(1, 99999)) 
@@ -61,9 +61,9 @@ def test_empty_name_field(driver):
         # Confirmar Senha
         driver.find_element(By.XPATH, "//input[@placeholder='Confirme a senha']").send_keys(DUMMY_DATA["Senha"])
         
-        # 3. Tentar clicar no botão "Cadastrar" (ou "Solicitar cadastro" se o texto for esse)
+        # 3. Tentar clicar no botão "Cadastrar"
         cadastro_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Cadastrar')]")
-        print('4. 🖱️ Clicando em "Cadastrar"...')
+        print('4.  Clicando em "Cadastrar"...')
         cadastro_button.click()
         time.sleep(2) 
 
@@ -73,7 +73,6 @@ def test_empty_name_field(driver):
         current_url = driver.current_url
         
         try:
-            # Tenta encontrar uma mensagem de erro de validação (Se a validação for do lado do servidor ou JS)
             error_message = driver.find_element(By.XPATH, f"//*[contains(text(), '{EXPECTED_ERROR_MESSAGE}')]")
             if error_message.is_displayed() or current_url == CADASTRO_URL:
                 print("\n Teste PASSOU: O cadastro foi impedido/erro de validação exibido.")

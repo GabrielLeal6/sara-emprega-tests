@@ -6,18 +6,16 @@ from selenium.common.exceptions import WebDriverException
 import time
 
 CHROME_DRIVER_PATH = '/path/to/chromedriver'
-LOGIN_URL = 'http://localhost:3000/login' # Tela esperada
-RESTRICTED_URL = 'http://localhost:3000/perfil' # Área restrita a ser testada
+LOGIN_URL = 'https://sara-frontend-736daffd516a.herokuapp.com/login' 
+RESTRICTED_URL = 'https://sara-frontend-736daffd516a.herokuapp.com/home/user' 
 
 def setup_driver():
-    """Inicializa o WebDriver."""
+
     try:
-        # Tenta usar o driver configurado
         if CHROME_DRIVER_PATH and CHROME_DRIVER_PATH != '/path/to/chromedriver':
              service = Service(CHROME_DRIVER_PATH)
              driver = webdriver.Chrome(service=service)
         else:
-            # Tenta usar driver no PATH
             driver = webdriver.Chrome()
         return driver
     except WebDriverException:
@@ -28,7 +26,7 @@ def test_unauthenticated_access(driver):
     
     print(f"1.  Tentando acessar a URL restrita diretamente: {RESTRICTED_URL}")
     driver.get(RESTRICTED_URL)
-    time.sleep(3) # Tempo para o redirecionamento ocorrer
+    time.sleep(3)
     
     # 2. Verificação
     current_url = driver.current_url

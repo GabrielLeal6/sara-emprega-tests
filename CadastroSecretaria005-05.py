@@ -7,7 +7,7 @@ import time
 import random
 
 CHROME_DRIVER_PATH = '/path/to/chromedriver'
-CADASTRO_URL = 'http://localhost:3000/cadastro/secretaria'
+CADASTRO_URL = 'https://sara-frontend-736daffd516a.herokuapp.com/cadastro/secretaria'
 
 # Dados para preencher os campos. O e-mail será o valor inválido.
 INVALID_EMAIL = 'fernanda@@semas' 
@@ -16,7 +16,7 @@ DUMMY_DATA = {
     "Nome": f"Secretaria Teste {SEMESTER}",
     "Endereco": "Rua Teste de Email, 200",
     "Telefone": "81991111111",
-    "Senha": "Senha4321",
+    "Senha": "Senha4321#",
 }
 EXPECTED_ERROR_MESSAGE = 'E-mail inválido' 
 
@@ -35,13 +35,13 @@ def setup_driver():
 
 def test_invalid_email_format(driver):
     
-    print(f"1. 🚀 Acessando a tela de Cadastro de Secretaria: {CADASTRO_URL}")
+    print(f"1.  Acessando a tela de Cadastro de Secretaria: {CADASTRO_URL}")
     driver.get(CADASTRO_URL)
     time.sleep(2) 
     
     try:
         # 2. Preencher os campos restantes
-        print("2. 📝 Preenchendo todos os campos, incluindo o e-mail inválido...")
+        print("2.  Preenchendo todos os campos, incluindo o e-mail inválido...")
         
         # Nome
         driver.find_element(By.XPATH, "//input[@placeholder='Nome da secretaria']").send_keys(DUMMY_DATA["Nome"])
@@ -64,7 +64,7 @@ def test_invalid_email_format(driver):
         
         # 3. clicar no botão "Cadastrar"
         cadastro_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Cadastrar')]")
-        print('3. 🖱️ Clicando em "Cadastrar"...')
+        print('3.  Clicando em "Cadastrar"...')
         cadastro_button.click()
         time.sleep(2) 
 
