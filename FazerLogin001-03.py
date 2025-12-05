@@ -5,18 +5,19 @@ from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
 import time
 
-# NOTE
-CHROME_DRIVER_PATH = '/path/to/chromedriver'
-LOGIN_URL = 'http://localhost:3000/login' 
 
-# Test Credentials
-VALID_EMAIL = 'teste@mail.com'
-VALID_PASSWORD = 'senha123'
+# NOTE: 
+CHROME_DRIVER_PATH = '/path/to/chromedriver'
+LOGIN_URL = 'https://sara-frontend-736daffd516a.herokuapp.com/login' 
+
+
+INVALID_EMAIL = 'email.nao.existe@mail.com'
+VALID_PASSWORD = 'admin123'
+EXPECTED_ERROR_MESSAGE = 'Credenciais inválidas'
 
 def setup_driver():
-    """Initializes and configures the Selenium WebDriver."""
     try:
-
+        # Tenta inicializar o driver
         if CHROME_DRIVER_PATH and CHROME_DRIVER_PATH != '/path/to/chromedriver':
              service = Service(CHROME_DRIVER_PATH)
              driver = webdriver.Chrome(service=service)
@@ -29,58 +30,55 @@ def setup_driver():
         print("Please ensure ChromeDriver is installed and its path is correctly configured.")
         return None
 
-def test_login_success(driver):
-    """
-    Automates the steps to log in to the application.
-    1. Access the Login screen.
-    2. Insert a valid email.
-    3. Insert a valid password.
-    4. Click the 'Entrar' button.
-    """
+def test_login_invalid_email(driver):
+   
     
-    print(f"1.  Accessing URL: {LOGIN_URL}")
+    print(f"{LOGIN_URL}")
     driver.get(LOGIN_URL)
-
+   
     time.sleep(2) 
     
     try:
         email_field = driver.find_element(By.CSS_SELECTOR, 'input[type="email"], input:nth-of-type(1)')
-        print(f"2.  Inserting Email: {VALID_EMAIL}")
-        email_field.send_keys(VALID_EMAIL)
-        
 
+        email_field.send_keys(INVALID_EMAIL)
+        
         password_field = driver.find_element(By.CSS_SELECTOR, 'input[type="password"]')
-        print(f"3.  Inserting Password: {'*' * len(VALID_PASSWORD)}")
+        print(f" {'' * len(VALID_PASSWORD)}")
         password_field.send_keys(VALID_PASSWORD)
         
-
         login_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Entrar')]")
-        print("4.  Clicking 'Entrar' button...")
         login_button.click()
 
-
-        print("5.  Login action completed. Waiting for redirection/result...")
         time.sleep(3)
         
         current_url = driver.current_url
-        if current_url != LOGIN_URL:
-            print(f"Success! Driver was redirected to: {current_url}")
-        else:
-            print("Warning: Still on the login page. Login may have failed or there was no redirection.")
+        
+        # Tenta encontrar a mensagem de erro no corpo da página
+        try:
+            error_message_element = driver.find_element(By.XPATH, f"//*[contains(text(), '{EXPECTED_ERROR_MESSAGE}')]")
+            if error_message_element.is_displayed() and current_url == LOGIN_URL:
+                print("\n Teste PASSOU: Mensagem de erro exibida e permaneceu na página de login.")
+            else:
+                print("\n Teste FALHOU: Mensagem de erro não exibida ou houve redirecionamento.")
+        except NoSuchElementException:
+            if current_url == LOGIN_URL:
+                 print("\n Teste PASSOU: Permaneceu na página de login (Falha implícita).")
+            else:
+                 print(f"\n Teste FALHOU: Redirecionado para: {current_url}. Login inesperadamente bem-sucedido.")
 
     except NoSuchElementException:
-        print("Test FAILED: One or more required elements (Email/Password fields or 'Entrar' button) were not found on the page.")
+        print(" Teste FALHOU: Um ou mais elementos (Email/Password fields ou 'Entrar' button) não foram encontrados na página.")
     except Exception as e:
-        print(f"An unexpected error occurred during the test: {e}")
-
+        print(f" An unexpected error occurred during the test: {e}")
 
 if __name__ == "__main__":
     driver = setup_driver()
     
     if driver:
         try:
-            test_login_success(driver)
+            test_login_invalid_email(driver)
         finally:
-            print("\nTest finished. Closing the browser in 5 seconds...")
+            print("\n")
             time.sleep(5)
             driver.quit()
